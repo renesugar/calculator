@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 //
@@ -8,11 +8,10 @@
 
 #pragma once
 
-#include "Views\Memory.g.h"
-#include "Common\TitleBarHelper.h"
-#include "Converters\BooleanNegationConverter.h"
-#include "Converters\VisibilityNegationConverter.h"
-#include "CalcViewModel\StandardCalculatorViewModel.h"
+#include "Views/Memory.g.h"
+#include "Converters/BooleanNegationConverter.h"
+#include "Converters/VisibilityNegationConverter.h"
+#include "CalcViewModel/StandardCalculatorViewModel.h"
 
 namespace CalculatorApp
 {
@@ -48,11 +47,8 @@ namespace CalculatorApp
         void OnClearMenuItemClicked(_In_ Platform::Object^ sender, _In_ Windows::UI::Xaml::RoutedEventArgs^ e);
         void OnMemoryAddMenuItemClicked(_In_ Platform::Object^ sender, _In_ Windows::UI::Xaml::RoutedEventArgs^ e);
         void OnMemorySubtractMenuItemClicked(_In_ Platform::Object^ sender, _In_ Windows::UI::Xaml::RoutedEventArgs^ e);
-        void MemoryList_Loaded(_In_ Platform::Object^ sender, _In_ Windows::UI::Xaml::RoutedEventArgs^ e);
-        void MemoryList_Unloaded(_In_ Platform::Object^ sender, _In_ Windows::UI::Xaml::RoutedEventArgs^ e);
 
         CalculatorApp::ViewModel::MemoryItemViewModel^ GetMemoryItemForCurrentFlyout();
 
-        std::unique_ptr<CalculatorApp::Common::TitleBarHelper> m_titleBarHelper;
     };
 }

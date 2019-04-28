@@ -141,7 +141,7 @@ namespace CalculatorApp
 
             property Platform::String^ AccessKey
             {
-                Platform::String^ get() 
+                Platform::String^ get()
                 {
                     return m_accessKey;
                 }
@@ -170,7 +170,7 @@ namespace CalculatorApp
             static Platform::String^ GetNameResourceKey(ViewMode mode);
             static CategoryGroupType GetGroupType(ViewMode mode);
 
-            // GetIndex is 0-based, GetPostion is 1-based
+            // GetIndex is 0-based, GetPosition is 1-based
             static int GetIndex(ViewMode mode);
             static int GetFlatIndex(ViewMode mode);
             static int GetIndexInGroup(ViewMode mode, CategoryGroupType type);
@@ -220,11 +220,11 @@ namespace CalculatorApp
             static Windows::Foundation::Collections::IObservableVector<NavCategoryGroup^>^ CreateMenuOptions();
 
             static Platform::String^ GetHeaderResourceKey(CategoryGroupType type);
-            
+
         internal:
             static NavCategoryGroup^ CreateCalculatorCategory();
             static NavCategoryGroup^ CreateConverterCategory();
-    
+
         private:
             NavCategoryGroup(const NavCategoryGroupInitializer& groupInitializer);
 

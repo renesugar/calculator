@@ -8,9 +8,9 @@
 
 #include "pch.h"
 #include "Memory.xaml.h"
-#include "Controls\CalculatorButton.h"
-#include "CalcViewModel\StandardCalculatorViewModel.h"
-#include "CalcViewModel\Common\LocalizationService.h"
+#include "Controls/CalculatorButton.h"
+#include "CalcViewModel/StandardCalculatorViewModel.h"
+#include "CalcViewModel/Common/LocalizationService.h"
 
 using namespace CalculatorApp;
 using namespace CalculatorApp::Common;
@@ -31,7 +31,7 @@ using namespace Windows::UI::Xaml::Media;
 using namespace Windows::UI::Xaml::Navigation;
 using namespace Windows::UI::ViewManagement;
 
-// The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
+// The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
 DEPENDENCY_PROPERTY_INITIALIZATION(Memory, RowHeight);
 
@@ -118,19 +118,6 @@ void Memory::IsErrorVisualState::set(bool value)
         String^ newState = m_isErrorVisualState ? L"ErrorLayout" : L"NoErrorLayout";
         VisualStateManager::GoToState(this, newState, false);
     }
-}
-
-void Memory::MemoryList_Loaded(_In_ Object^ sender, _In_ RoutedEventArgs^ e)
-{
-    // When transitioning between docked and undocked view states, the memory list is
-    // unloaded and then loaded, so we attempt to create the titlebarhelper every time
-    // we are loaded, letting the util function check if we are docked or not.
-    m_titleBarHelper = TitleBarHelper::CreateTitleBarHelperIfNotDocked(CustomTitleBar);
-}
-
-void Memory::MemoryList_Unloaded(_In_ Object^ sender, _In_ RoutedEventArgs^ e)
-{
-    m_titleBarHelper = nullptr;
 }
 
 MemoryItemViewModel^ Memory::GetMemoryItemForCurrentFlyout()

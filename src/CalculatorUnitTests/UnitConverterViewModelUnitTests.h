@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 #include "pch.h"
@@ -41,11 +41,14 @@ namespace CalculatorUnitTests
             void RestoreUserPreferences(_In_ const std::wstring& userPreferences) override;
             void SendCommand(UCM::Command command) override;
             void SetViewModelCallback(const std::shared_ptr<UCM::IUnitConverterVMCallback>& newCallback) override;
-            void SetViewModelCurrencyCallback(_In_ const std::shared_ptr<UCM::IViewModelCurrencyCallback>& newCallback) override {}
+            void SetViewModelCurrencyCallback(_In_ const std::shared_ptr<UCM::IViewModelCurrencyCallback>& /*newCallback*/) override {}
+            void Calculate() override {}
+            void ResetCategoriesAndRatios() override{}
             concurrency::task<std::pair<bool, std::wstring>> RefreshCurrencyRatios() override
             {
-                co_return std::make_pair(L"", L"");
+                co_return std::make_pair(true, L"");
             }
+
 
             UINT m_initCallCount;
             UINT m_getCategoriesCallCount;

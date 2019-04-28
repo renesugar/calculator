@@ -16,7 +16,6 @@
 //
 //-----------------------------------------------------------------------------
 
-#include "pch.h"
 #include "ratpak.h"
 
 using namespace std;
@@ -38,7 +37,7 @@ using namespace std;
 //
 //-----------------------------------------------------------------------------
 
-void gcdrat( PRAT *pa, uint32_t radix, int32_t precision)
+void gcdrat( PRAT *pa, int32_t precision)
 
 {
     PNUMBER pgcd= nullptr;
@@ -56,7 +55,7 @@ void gcdrat( PRAT *pa, uint32_t radix, int32_t precision)
     destroynum( pgcd );
     *pa=a;
 
-    RENORMALIZE(*pa);    
+    RENORMALIZE(*pa);
 }
 
 //-----------------------------------------------------------------------------
@@ -82,7 +81,7 @@ void fracrat( PRAT *pa , uint32_t radix, int32_t precision)
 
     remnum( &((*pa)->pp), (*pa)->pq, BASEX );
 
-    //Get *pa back in the integer over integer form.
+    // Get *pa back in the integer over integer form.
     RENORMALIZE(*pa);
 }
 
@@ -100,7 +99,7 @@ void fracrat( PRAT *pa , uint32_t radix, int32_t precision)
 //-----------------------------------------------------------------------------
 
 void mulrat( PRAT *pa, PRAT b, int32_t precision)
-    
+
     {
     // Only do the multiply if it isn't zero.
     if ( !zernum( (*pa)->pp ) )
@@ -170,7 +169,7 @@ void divrat( PRAT *pa, PRAT b, int32_t precision)
 
 #ifdef DIVGCD
     gcdrat( pa );
-#endif 
+#endif
 
 }
 
@@ -183,7 +182,7 @@ void divrat( PRAT *pa, PRAT b, int32_t precision)
 //    RETURN: None, changes first pointer.
 //
 //    DESCRIPTION: Does the rational equivalent of *pa += b.
-//    Assumes base is internal througought.
+//    Assumes base is internal throughout.
 //
 //-----------------------------------------------------------------------------
 
@@ -204,7 +203,7 @@ void subrat( PRAT *pa, PRAT b, int32_t precision)
 //    RETURN: None, changes first pointer.
 //
 //    DESCRIPTION: Does the rational equivalent of *pa += b.
-//    Assumes base is internal througought.
+//    Assumes base is internal throughout.
 //
 //-----------------------------------------------------------------------------
 
@@ -215,13 +214,13 @@ void addrat( PRAT *pa, PRAT b, int32_t precision)
 
     if ( equnum( (*pa)->pq, b->pq ) )
         {
-        // Very special case, q's match., 
+        // Very special case, q's match.,
         // make sure signs are involved in the calculation
-        // we have to do this since the optimization here is only 
+        // we have to do this since the optimization here is only
         // working with the top half of the rationals.
-        (*pa)->pp->sign *= (*pa)->pq->sign; 
+        (*pa)->pp->sign *= (*pa)->pq->sign;
         (*pa)->pq->sign = 1;
-        b->pp->sign *= b->pq->sign; 
+        b->pp->sign *= b->pq->sign;
         b->pq->sign = 1;
         addnum( &((*pa)->pp), b->pp, BASEX );
         }
@@ -236,15 +235,15 @@ void addrat( PRAT *pa, PRAT b, int32_t precision)
         destroynum( (*pa)->pq );
         (*pa)->pq = bot;
         trimit(pa, precision);
-        
+
         // Get rid of negative zeros here.
-        (*pa)->pp->sign *= (*pa)->pq->sign; 
+        (*pa)->pp->sign *= (*pa)->pq->sign;
         (*pa)->pq->sign = 1;
         }
 
 #ifdef ADDGCD
     gcdrat( pa );
-#endif 
+#endif
 
 }
 
@@ -264,7 +263,7 @@ void addrat( PRAT *pa, PRAT b, int32_t precision)
 //-----------------------------------------------------------------------------
 
 void rootrat( PRAT *py, PRAT n, uint32_t radix, int32_t precision)
-{    
+{
     // Initialize 1/n
     PRAT oneovern= nullptr;
     DUPRAT(oneovern,rat_one);

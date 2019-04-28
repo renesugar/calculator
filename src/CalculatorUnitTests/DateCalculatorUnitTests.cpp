@@ -1,12 +1,12 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 #include "pch.h"
 #include <CppUnitTest.h>
 #include "DateUtils.h"
 
-#include "CalcViewModel\Common\DateCalculator.h"
-#include "CalcViewModel\DateCalculatorViewModel.h"
+#include "CalcViewModel/Common/DateCalculator.h"
+#include "CalcViewModel/DateCalculatorViewModel.h"
 
 using namespace Platform;
 using namespace std;
@@ -387,6 +387,63 @@ namespace DateCalculationUnitTests
             VERIFY_IS_TRUE(StringReference(L"") != viewModel->StrDateResult);
         }
 
+        TEST_METHOD(DateCalcViewModelDateDiffDaylightSavingTimeTest)
+        {
+          auto viewModel = ref new DateCalculatorViewModel();
+
+          viewModel->IsDateDiffMode = true;
+          VERIFY_IS_TRUE(viewModel->IsDateDiffMode);
+
+          // 29.02.2008
+          viewModel->FromDate = DateUtils::SystemTimeToDateTime(datetimeDifftest[5].startDate);
+          // 31.03.2008
+          viewModel->ToDate = DateUtils::SystemTimeToDateTime(datetimeDifftest[5].endDate);
+
+          //// Assert for the result
+          VERIFY_IS_FALSE(viewModel->IsDiffInDays);
+          VERIFY_ARE_EQUAL(StringReference(L"31 days"), viewModel->StrDateDiffResultInDays);
+          VERIFY_ARE_EQUAL(StringReference(L"1 month, 2 days"), viewModel->StrDateDiffResult);
+
+          // Daylight Saving Time - Clock Forward
+          // 10.03.2019
+          SYSTEMTIME startDate;
+          startDate.wYear = 2019;
+          startDate.wMonth = 03;
+          startDate.wDay = 10;
+          startDate.wDayOfWeek = 0;
+          startDate.wHour = startDate.wMinute = 0;
+          startDate.wSecond = startDate.wMilliseconds = 0;
+          viewModel->FromDate = DateUtils::SystemTimeToDateTime(startDate);
+          // 11.03.2019
+          SYSTEMTIME endDate;
+          endDate.wYear = 2019;
+          endDate.wMonth = 03;
+          endDate.wDay = 11;
+          endDate.wDayOfWeek = 0;
+          endDate.wHour = endDate.wMinute = 0;
+          endDate.wSecond = endDate.wMilliseconds = 0;
+          viewModel->ToDate = DateUtils::SystemTimeToDateTime(endDate);
+          VERIFY_IS_TRUE(viewModel->IsDiffInDays);
+          VERIFY_ARE_EQUAL(StringReference(L"1 day"), viewModel->StrDateDiffResult);
+
+          endDate.wDay += 6;
+          viewModel->ToDate = DateUtils::SystemTimeToDateTime(endDate);
+          VERIFY_IS_FALSE(viewModel->IsDiffInDays);
+          VERIFY_ARE_EQUAL(StringReference(L"1 week"), viewModel->StrDateDiffResult);
+
+          // Daylight Saving Time - Clock Backward
+          // 03.11.2019
+          startDate.wMonth = 11;
+          startDate.wDay = 03;
+          viewModel->FromDate = DateUtils::SystemTimeToDateTime(startDate);
+          // 04.11.2019
+          endDate.wMonth = 11;
+          endDate.wDay = 04;
+          viewModel->ToDate = DateUtils::SystemTimeToDateTime(endDate);
+          VERIFY_IS_TRUE(viewModel->IsDiffInDays);
+          VERIFY_ARE_EQUAL(StringReference(L"1 day"), viewModel->StrDateDiffResult);
+        }
+
         TEST_METHOD(DateCalcViewModelAddTest)
         {
             // TODO - MSFT 10331900, fix this test
@@ -494,6 +551,26 @@ namespace DateCalculationUnitTests
             }
         }
 
+        TEST_METHOD(DateCalcViewModelDateDiffIgnoreSignTest)
+        {
+            auto viewModel = ref new DateCalculatorViewModel();
+
+            viewModel->IsDateDiffMode = true;
+            VERIFY_IS_TRUE(viewModel->IsDateDiffMode);
+
+            viewModel->FromDate = DateUtils::SystemTimeToDateTime(date[10]);
+            viewModel->ToDate = DateUtils::SystemTimeToDateTime(date[6]);
+
+            VERIFY_IS_FALSE(viewModel->IsDiffInDays);
+            VERIFY_ARE_EQUAL(StringReference(L"305 days"), viewModel->StrDateDiffResultInDays);
+            VERIFY_ARE_EQUAL(StringReference(L"10 months"), viewModel->StrDateDiffResult);
+            viewModel->FromDate = DateUtils::SystemTimeToDateTime(date[6]);
+            viewModel->ToDate = DateUtils::SystemTimeToDateTime(date[10]);
+            VERIFY_IS_FALSE(viewModel->IsDiffInDays);
+            VERIFY_ARE_EQUAL(StringReference(L"305 days"), viewModel->StrDateDiffResultInDays);
+            VERIFY_ARE_EQUAL(StringReference(L"10 months"), viewModel->StrDateDiffResult);
+        }
+
         TEST_METHOD(DateCalcViewModelDateDiffTest)
         {
             // TODO - MSFT 10331900, fix this test
@@ -516,7 +593,23 @@ namespace DateCalculationUnitTests
             //VERIFY_ARE_EQUAL(StringReference(L"8398 years, 11 months, 4 weeks, 2 days"), viewModel->StrDateDiffResult);
         }
 
-        TEST_METHOD(DateCalcViewModelDateDiffResultInDaysTest)
+        TEST_METHOD(DateCalcViewModelDateDiffResultInPositiveDaysTest)
+        {
+            auto viewModel = ref new DateCalculatorViewModel();
+
+            viewModel->IsDateDiffMode = true;
+            VERIFY_IS_TRUE(viewModel->IsDateDiffMode);
+
+            viewModel->FromDate = DateUtils::SystemTimeToDateTime(date[1]);
+            viewModel->ToDate = DateUtils::SystemTimeToDateTime(date[0]);
+
+            // Assert for the result
+            VERIFY_IS_TRUE(viewModel->IsDiffInDays);
+            VERIFY_ARE_EQUAL(StringReference(L"1 day"), viewModel->StrDateDiffResult);
+            VERIFY_IS_NULL(viewModel->StrDateDiffResultInDays);
+        }
+
+        TEST_METHOD(DateCalcViewModelDateDiffFromDateHigherThanToDate)
         {
             auto viewModel = ref new DateCalculatorViewModel();
 
@@ -570,6 +663,58 @@ namespace DateCalculationUnitTests
                 wstring message = L"Verifying " + component + L" is present in the result";
                 VERIFY_IS_TRUE(actualValue.find(expectedValue) != wstring::npos, message.c_str());
             }
+        }
+
+        TEST_METHOD(JaEraTransitionAddition)
+        {
+            auto viewModel = make_unique<DateCalculationEngine>(CalendarIdentifiers::Japanese);
+            auto cal = ref new Calendar();
+
+            // Showa period ended in Jan 1989.
+            cal->Year = 1989;
+            cal->Month = 1;
+            cal->Day = 1;
+            auto startTime = cal->GetDateTime();
+
+            cal->Year = 1990;
+            cal->Month = 1;
+            cal->Day = 1;
+
+            // Expect that adding a year across boundaries adds the equivalent in the Gregorian calendar.
+            auto expectedResult = cal->GetDateTime();
+            DateDifference duration;
+            duration.year = 1;
+
+            DateTime actualResult;
+            viewModel->AddDuration(startTime, duration, &actualResult);
+
+            VERIFY_ARE_EQUAL(expectedResult.UniversalTime, actualResult.UniversalTime);
+        }
+
+        TEST_METHOD(JaEraTransitionSubtraction)
+        {
+            auto viewModel = make_unique<DateCalculationEngine>(CalendarIdentifiers::Japanese);
+            auto cal = ref new Calendar();
+
+            // Showa period ended in Jan 1989.
+            cal->Year = 1990;
+            cal->Month = 1;
+            cal->Day = 1;
+            auto startTime = cal->GetDateTime();
+
+            cal->Year = 1989;
+            cal->Month = 1;
+            cal->Day = 1;
+
+            // Expect that adding a year across boundaries adds the equivalent in the Gregorian calendar.
+            auto expectedResult = cal->GetDateTime();
+            DateDifference duration;
+            duration.year = 1;
+
+            DateTime actualResult;
+            viewModel->SubtractDuration(startTime, duration, &actualResult);
+
+            VERIFY_ARE_EQUAL(expectedResult.UniversalTime, actualResult.UniversalTime);
         }
     };
 }

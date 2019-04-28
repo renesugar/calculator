@@ -1,7 +1,9 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 #pragma once
+
+#include <memory> // for std::shared_ptr
 #include "CalculatorVector.h"
 #include "Command.h"
 
@@ -30,7 +32,7 @@ public:
 class IBinaryCommand : public IOperatorCommand
 {
 public:
-    virtual void SetCommand(int command) = 0;
+    virtual void SetCommand(int command) override = 0;
     virtual int GetCommand() const = 0;
 };
 

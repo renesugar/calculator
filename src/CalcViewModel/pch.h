@@ -10,6 +10,10 @@
 #define WIN32_LEAN_AND_MEAN
 #endif
 
+// Windows headers define min/max macros.
+// Disable it for project code.
+#define NOMINMAX
+
 #include <windows.h>
 
 #include <collection.h>
@@ -26,14 +30,14 @@
 #include <sstream>
 #include <concrt.h>
 #include <regex>
-
+#include <iterator>
 // C++\WinRT Headers
-#include "winrt\base.h"
-#include "winrt\Windows.Foundation.Diagnostics.h"
-#include "winrt\Windows.Globalization.h"
-#include "winrt\Windows.Globalization.DateTimeFormatting.h"
-#include "winrt\Windows.System.UserProfile.h"
-#include "winrt\Windows.UI.Xaml.h"
+#include "winrt/base.h"
+#include "winrt/Windows.Foundation.Diagnostics.h"
+#include "winrt/Windows.Globalization.h"
+#include "winrt/Windows.Globalization.DateTimeFormatting.h"
+#include "winrt/Windows.System.UserProfile.h"
+#include "winrt/Windows.UI.Xaml.h"
 
 // The following namespaces exist as a convenience to resolve
 // ambiguity for Windows types in the Windows::UI::Xaml::Automation::Peers

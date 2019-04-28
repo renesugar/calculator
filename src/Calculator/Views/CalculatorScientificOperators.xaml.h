@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 //
@@ -8,11 +8,11 @@
 
 #pragma once
 
-#include "Views\CalculatorScientificOperators.g.h"
-#include "Views\NumberPad.xaml.h"
-#include "Converters\BooleanNegationConverter.h"
-#include "Converters\VisibilityNegationConverter.h"
-#include "CalcViewModel\StandardCalculatorViewModel.h"
+#include "Views/CalculatorScientificOperators.g.h"
+#include "Views/NumberPad.xaml.h"
+#include "Converters/BooleanNegationConverter.h"
+#include "Converters/VisibilityNegationConverter.h"
+#include "CalcViewModel/StandardCalculatorViewModel.h"
 
 namespace CalculatorApp
 {
@@ -33,7 +33,8 @@ namespace CalculatorApp
         DEPENDENCY_PROPERTY_WITH_DEFAULT(bool, IsWideLayout, false);
 
         bool IsShiftEnabled(bool isWideLayout, bool isErrorState) { return !(isWideLayout || isErrorState); }
-
+        void OpenParenthesisButton_GotFocus(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
+        Platform::String^ ParenthesisCountToString(unsigned int count);
     private:
         void ShortLayout_Completed(_In_ Platform::Object^ sender, _In_ Platform::Object^ e);
         void WideLayout_Completed(_In_ Platform::Object^ sender, _In_ Platform::Object^ e);

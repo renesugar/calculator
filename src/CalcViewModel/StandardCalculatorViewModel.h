@@ -2,11 +2,11 @@
 // Licensed under the MIT License.
 
 #pragma once
-#include "Common\Automation\NarratorAnnouncement.h"
-#include "Common\DisplayExpressionToken.h"
-#include "Common\CalculatorDisplay.h"
-#include "Common\EngineResourceProvider.h"
-#include "Common\CalculatorButtonUser.h"
+#include "Common/Automation/NarratorAnnouncement.h"
+#include "Common/DisplayExpressionToken.h"
+#include "Common/CalculatorDisplay.h"
+#include "Common/EngineResourceProvider.h"
+#include "Common/CalculatorButtonUser.h"
 #include "HistoryViewModel.h"
 #include "MemoryItemViewModel.h"
 
@@ -31,12 +31,6 @@ namespace CalculatorApp
 #define ASCII_0 48
         public delegate void HideMemoryClickedHandler();
         public delegate void ProgModeRadixChangeHandler();
-        namespace CalculatorViewModelProperties
-        {
-            extern Platform::StringReference IsMemoryEmpty;
-            extern Platform::StringReference IsInError;
-            extern Platform::StringReference BinaryDisplayValue;
-        }
 
         [Windows::UI::Xaml::Data::Bindable]
         public ref class StandardCalculatorViewModel sealed : public Windows::UI::Xaml::Data::INotifyPropertyChanged
@@ -51,14 +45,14 @@ namespace CalculatorApp
             OBSERVABLE_OBJECT_CALLBACK(OnPropertyChanged);
             OBSERVABLE_PROPERTY_RW(Platform::String^, DisplayValue);
             OBSERVABLE_PROPERTY_RW(HistoryViewModel^, HistoryVM);
-            OBSERVABLE_PROPERTY_RW(bool, IsInError);
+            OBSERVABLE_NAMED_PROPERTY_RW(bool, IsInError);
             OBSERVABLE_PROPERTY_RW(bool, IsOperatorCommand);
             OBSERVABLE_PROPERTY_RW(Platform::String^, DisplayStringExpression);
-            OBSERVABLE_PROPERTY_RW(Windows::Foundation::Collections::IVector<Common::DisplayExpressionToken^>^, ExpressionTokens);
+            OBSERVABLE_PROPERTY_R(Windows::Foundation::Collections::IObservableVector<Common::DisplayExpressionToken^>^, ExpressionTokens);
             OBSERVABLE_PROPERTY_RW(Platform::String^, DecimalDisplayValue);
             OBSERVABLE_PROPERTY_RW(Platform::String^, HexDisplayValue);
             OBSERVABLE_PROPERTY_RW(Platform::String^, OctalDisplayValue);
-            OBSERVABLE_PROPERTY_RW(Platform::String^, BinaryDisplayValue);
+            OBSERVABLE_NAMED_PROPERTY_RW(Platform::String^, BinaryDisplayValue);
             OBSERVABLE_PROPERTY_RW(Platform::String^, HexDisplayValue_AutomationName);
             OBSERVABLE_PROPERTY_RW(Platform::String^, DecDisplayValue_AutomationName);
             OBSERVABLE_PROPERTY_RW(Platform::String^, OctDisplayValue_AutomationName);
@@ -69,30 +63,29 @@ namespace CalculatorApp
             OBSERVABLE_PROPERTY_RW(bool, IsDecimalEnabled);
             OBSERVABLE_PROPERTY_RW(bool, IsCurrentViewPinned);
             OBSERVABLE_PROPERTY_RW(Windows::Foundation::Collections::IVector<MemoryItemViewModel^>^, MemorizedNumbers);
-            OBSERVABLE_PROPERTY_RW(bool, IsMemoryEmpty);
+            OBSERVABLE_NAMED_PROPERTY_RW(bool, IsMemoryEmpty);
             OBSERVABLE_PROPERTY_RW(bool, IsFToEChecked);
             OBSERVABLE_PROPERTY_RW(bool, IsFToEEnabled);
             OBSERVABLE_PROPERTY_RW(bool, IsHyperbolicChecked);
             OBSERVABLE_PROPERTY_RW(bool, AreHEXButtonsEnabled);
-            NAMED_OBSERVABLE_PROPERTY_RW(Platform::String^, CalculationResultAutomationName);
-            NAMED_OBSERVABLE_PROPERTY_RW(Platform::String^, CalculationExpressionAutomationName);
+            OBSERVABLE_PROPERTY_RW(Platform::String^, CalculationResultAutomationName);
+            OBSERVABLE_PROPERTY_RW(Platform::String^, CalculationExpressionAutomationName);
             OBSERVABLE_PROPERTY_RW(bool, IsShiftProgrammerChecked);
             OBSERVABLE_PROPERTY_RW(bool, IsQwordEnabled);
             OBSERVABLE_PROPERTY_RW(bool, IsDwordEnabled);
             OBSERVABLE_PROPERTY_RW(bool, IsWordEnabled);
             OBSERVABLE_PROPERTY_RW(bool, IsByteEnabled);
-            OBSERVABLE_PROPERTY_RW(Platform::String^, OpenParenthesisCount);
             OBSERVABLE_PROPERTY_RW(int, CurrentRadixType);
             OBSERVABLE_PROPERTY_RW(bool, AreTokensUpdated);
             OBSERVABLE_PROPERTY_RW(bool, AreHistoryShortcutsEnabled);
             OBSERVABLE_PROPERTY_RW(bool, AreProgrammerRadixOperatorsEnabled);
             OBSERVABLE_PROPERTY_RW(CalculatorApp::Common::Automation::NarratorAnnouncement^, Announcement);
+            OBSERVABLE_PROPERTY_R(unsigned int, OpenParenthesisCount);
 
             COMMAND_FOR_METHOD(CopyCommand, StandardCalculatorViewModel::OnCopyCommand);
             COMMAND_FOR_METHOD(PasteCommand, StandardCalculatorViewModel::OnPasteCommand);
             COMMAND_FOR_METHOD(ButtonPressed, StandardCalculatorViewModel::OnButtonPressed);
             COMMAND_FOR_METHOD(ClearMemoryCommand, StandardCalculatorViewModel::OnClearMemoryCommand);
-            COMMAND_FOR_METHOD(PinUnpinAppBarButtonOnClicked, StandardCalculatorViewModel::OnPinUnpinCommand);
             COMMAND_FOR_METHOD(MemoryItemPressed, StandardCalculatorViewModel::OnMemoryItemPressed);
             COMMAND_FOR_METHOD(MemoryAdd, StandardCalculatorViewModel::OnMemoryAdd);
             COMMAND_FOR_METHOD(MemorySubtract, StandardCalculatorViewModel::OnMemorySubtract);
@@ -261,14 +254,6 @@ namespace CalculatorApp
                 void set(bool value) { m_completeTextSelection = value; }
             }
 
-            property Platform::String^ LeftParenthesisAutomationName
-            {
-                Platform::String^ get() 
-                {
-                    return GetLeftParenthesisAutomationName();
-                }
-            }
-
         internal:
             void OnPaste(Platform::String^ pastedString, CalculatorApp::Common::ViewMode mode);
             void OnCopyCommand(Platform::Object^ parameter);
@@ -276,7 +261,7 @@ namespace CalculatorApp
 
             NumbersAndOperatorsEnum MapCharacterToButtonId(const wchar_t ch, bool& canSendNegate);
 
-            //Memory feature related methods. They are internal because they need to called from the MainPage code-behind
+            // Memory feature related methods. They are internal because they need to called from the MainPage code-behind
             void OnMemoryButtonPressed();
             void OnMemoryItemPressed(Platform::Object^ memoryItemPosition);
             void OnMemoryAdd(Platform::Object^ memoryItemPosition);
@@ -289,7 +274,10 @@ namespace CalculatorApp
             void SetTokens(_Inout_ std::shared_ptr<CalculatorVector<std::pair<std::wstring, int>>> const &tokens);
             void SetExpressionDisplay(_Inout_ std::shared_ptr<CalculatorVector<std::pair<std::wstring, int>>> const &tokens, _Inout_ std::shared_ptr<CalculatorVector<std::shared_ptr<IExpressionCommand>>> const &commands);
             void SetHistoryExpressionDisplay(_Inout_ std::shared_ptr<CalculatorVector<std::pair<std::wstring, int>>> const &tokens, _Inout_ std::shared_ptr<CalculatorVector <std::shared_ptr<IExpressionCommand>>> const &commands);
-            void SetParenthesisCount(_In_ const std::wstring& parenthesisCount);
+            void SetParenthesisCount(_In_ unsigned int parenthesisCount);
+            void SetOpenParenthesisCountNarratorAnnouncement();
+            void OnNoRightParenAdded();
+            void SetNoParenAddedNarratorAnnouncement();
             void OnMaxDigitsReached();
             void OnBinaryOperatorReceived();
             void OnMemoryItemChanged(unsigned int indexOfMemory);
@@ -337,6 +325,8 @@ namespace CalculatorApp
             Platform::String^ m_localizedMemoryItemChangedAutomationFormat;
             Platform::String^ m_localizedMemoryItemClearedAutomationFormat;
             Platform::String^ m_localizedMemoryCleared;
+            Platform::String^ m_localizedOpenParenthesisCountChangedAutomationFormat;
+            Platform::String^ m_localizedNoRightParenthesisAddedFormat;
 
             bool m_pinned;
             bool m_isOperandEnabled;
@@ -355,7 +345,6 @@ namespace CalculatorApp
             bool m_isLastOperationHistoryLoad;
             Platform::String^ m_selectedExpressionLastData;
             Common::DisplayExpressionToken^ m_selectedExpressionToken;
-            Platform::String^ m_leftParenthesisAutomationFormat;
 
             Platform::String^ LocalizeDisplayValue(_In_ std::wstring const &displayValue, _In_ bool isError);
             Platform::String^ CalculateNarratorDisplayValue(_In_ std::wstring const &displayValue, _In_ Platform::String^ localizedDisplayValue, _In_ bool isError);
@@ -365,7 +354,6 @@ namespace CalculatorApp
 
             CalculationManager::Command ConvertToOperatorsEnum(NumbersAndOperatorsEnum operation);
             void DisableButtons(CalculationManager::CommandType selectedExpressionCommandType);
-            Platform::String^ GetLeftParenthesisAutomationName();
 
             Platform::String^ m_feedbackForButtonPress;
             void OnButtonPressed(Platform::Object^ parameter);

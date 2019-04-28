@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 #pragma once
@@ -94,7 +94,7 @@ namespace CalculationManager
         CommandFAC = 113,
         CommandREC = 114,
         CommandDMS = 115,
-        CommandCUBEROOT = 116,  //x ^ 1/3
+        CommandCUBEROOT = 116,  // x ^ 1/3
         CommandPOW10 = 117,  // 10 ^ x
         CommandPERCENT = 118,
 

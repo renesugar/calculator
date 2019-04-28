@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 //
@@ -8,12 +8,12 @@
 
 #include "pch.h"
 #include "CalculatorProgrammerRadixOperators.xaml.h"
-#include "Controls\CalculatorButton.h"
-#include "Converters\BooleanToVisibilityConverter.h"
-#include "Views\NumberPad.xaml.h"
+#include "Controls/CalculatorButton.h"
+#include "Converters/BooleanToVisibilityConverter.h"
+#include "Views/NumberPad.xaml.h"
 
+using namespace std;
 using namespace CalculatorApp;
-
 using namespace CalculatorApp::ViewModel;
 using namespace Platform;
 using namespace Windows::UI::Xaml;
@@ -34,8 +34,11 @@ CalculatorProgrammerRadixOperators::CalculatorProgrammerRadixOperators() :
 
 void CalculatorProgrammerRadixOperators::OnLoaded(Object^, RoutedEventArgs^)
 {
-    auto viewmodel = safe_cast<StandardCalculatorViewModel^>(this->DataContext);
-    viewmodel->ProgModeRadixChange += ref new ProgModeRadixChangeHandler(this, &CalculatorProgrammerRadixOperators::ProgModeRadixChange);
+    m_progModeRadixChangeToken = Model->ProgModeRadixChange += ref new ProgModeRadixChangeHandler(this, &CalculatorProgrammerRadixOperators::ProgModeRadixChange);
+}
+void CalculatorProgrammerRadixOperators::OnUnloaded(Object^, RoutedEventArgs^)
+{
+    Model->ProgModeRadixChange -= m_progModeRadixChangeToken;
 }
 
 void CalculatorProgrammerRadixOperators::Shift_Clicked(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
@@ -44,25 +47,25 @@ void CalculatorProgrammerRadixOperators::Shift_Clicked(Platform::Object^ sender,
     auto scvm = safe_cast<StandardCalculatorViewModel^>(this->DataContext);
     scvm->IsShiftProgrammerChecked = isShiftChecked;
 
-    if (rolButton == nullptr)
+    if (RolButton == nullptr)
     {
-        FindName("rolButton");
-        FindName("rorButton");
+        FindName("RolButton");
+        FindName("RorButton");
     }
 
     if (isShiftChecked)
     {
-        rolButton->Visibility = ::Visibility::Visible;
-        rorButton->Visibility = ::Visibility::Visible;
-        lshButton->Visibility = ::Visibility::Collapsed;
-        rshButton->Visibility = ::Visibility::Collapsed;
+        RolButton->Visibility = ::Visibility::Visible;
+        RorButton->Visibility = ::Visibility::Visible;
+        LshButton->Visibility = ::Visibility::Collapsed;
+        RshButton->Visibility = ::Visibility::Collapsed;
     }
     else
     {
-        rolButton->Visibility = ::Visibility::Collapsed;
-        rorButton->Visibility = ::Visibility::Collapsed;
-        lshButton->Visibility = ::Visibility::Visible;
-        rshButton->Visibility = ::Visibility::Visible;
+        RolButton->Visibility = ::Visibility::Collapsed;
+        RorButton->Visibility = ::Visibility::Collapsed;
+        LshButton->Visibility = ::Visibility::Visible;
+        RshButton->Visibility = ::Visibility::Visible;
     }
 }
 
@@ -93,4 +96,14 @@ void CalculatorProgrammerRadixOperators::IsErrorVisualState::set(bool value)
         VisualStateManager::GoToState(this, newState, false);
         NumberPad->IsErrorVisualState = m_isErrorVisualState;
     }
+}
+
+String^ CalculatorProgrammerRadixOperators::ParenthesisCountToString(unsigned int count) {
+    return (count == 0) ? ref new String() : ref new String(to_wstring(count).data());
+}
+
+
+void CalculatorProgrammerRadixOperators::CalculatorProgrammerRadixOperators::OpenParenthesisButton_GotFocus(Object^ sender, RoutedEventArgs^ e)
+{
+    Model->SetOpenParenthesisCountNarratorAnnouncement();
 }

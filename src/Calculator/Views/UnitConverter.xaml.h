@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 // UnitConverter.xaml.h
@@ -6,13 +6,13 @@
 
 #pragma once
 
-#include "Views\UnitConverter.g.h"
-#include "Common\AlwaysSelectedCollectionView.h"
-#include "CalcViewModel\Common\ValidatingConverters.h"
-#include "Converters\BooleanToVisibilityConverter.h"
-#include "Converters\VisibilityNegationConverter.h"
-#include "CalcViewModel\UnitConverterViewModel.h"
-#include "Views\StateTriggers\AspectRatioTrigger.h"
+#include "Views/UnitConverter.g.h"
+#include "Common/AlwaysSelectedCollectionView.h"
+#include "CalcViewModel/Common/ValidatingConverters.h"
+#include "Converters/BooleanToVisibilityConverter.h"
+#include "Converters/VisibilityNegationConverter.h"
+#include "CalcViewModel/UnitConverterViewModel.h"
+#include "Views/StateTriggers/AspectRatioTrigger.h"
 
 namespace CalculatorApp
 {
@@ -22,6 +22,7 @@ namespace CalculatorApp
     public:
         UnitConverter();
         DEPENDENCY_PROPERTY_OWNER(UnitConverter);
+        PROPERTY_R(Windows::UI::Xaml::HorizontalAlignment, FlowDirectionHorizontalAlignment);
 
         void AnimateConverter();
 
@@ -88,5 +89,6 @@ namespace CalculatorApp
         Windows::UI::Xaml::DispatcherTimer^ m_delayTimer;
 
         bool m_isAnimationEnabled;
+        void SupplementaryResultsPanelInGrid_SizeChanged(Platform::Object^ sender, Windows::UI::Xaml::SizeChangedEventArgs^ e);
     };
 }

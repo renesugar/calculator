@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 //
@@ -11,6 +11,10 @@
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
 #endif
+
+// Windows headers define min/max macros.
+// Disable it for project code.
+#define NOMINMAX
 
 #define UNIT_TESTS
 
@@ -38,11 +42,11 @@
 #include <sstream>
 
 // C++\WinRT Headers
-#include "winrt\base.h"
-#include "winrt\Windows.Foundation.Diagnostics.h"
-#include "winrt\Windows.Globalization.h"
-#include "winrt\Windows.Globalization.DateTimeFormatting.h"
-#include "winrt\Windows.System.UserProfile.h"
+#include "winrt/base.h"
+#include "winrt/Windows.Foundation.Diagnostics.h"
+#include "winrt/Windows.Globalization.h"
+#include "winrt/Windows.Globalization.DateTimeFormatting.h"
+#include "winrt/Windows.System.UserProfile.h"
 
 namespace CalculatorApp
 {
@@ -73,22 +77,22 @@ namespace StandardPeers = Windows::UI::Xaml::Automation::Peers;
 namespace CalculatorApp::Common::Automation {}
 namespace CustomPeers = CalculatorApp::Common::Automation;
 
-//CalcManager Headers
-#include "CalcManager\CalculatorVector.h"
-#include "CalcManager\ExpressionCommand.h"
-#include "CalcManager\CalculatorResource.h"
-#include "CalcManager\CalculatorManager.h"
-#include "CalcManager\UnitConverter.h"
+// CalcManager Headers
+#include "CalcManager/CalculatorVector.h"
+#include "CalcManager/ExpressionCommand.h"
+#include "CalcManager/CalculatorResource.h"
+#include "CalcManager/CalculatorManager.h"
+#include "CalcManager/UnitConverter.h"
 
 // CalcViewModel Headers
-#include "CalcViewModel\Common\DelegateCommand.h"
-#include "CalcViewModel\Common\Utils.h"
-#include "CalcViewModel\Common\MyVirtualKey.h"
-#include "CalcViewModel\Common\NavCategory.h"
-#include "CalcViewModel\Common\CalculatorButtonUser.h"
-#include "CalcViewModel\Common\NetworkManager.h"
+#include "CalcViewModel/Common/DelegateCommand.h"
+#include "CalcViewModel/Common/Utils.h"
+#include "CalcViewModel/Common/MyVirtualKey.h"
+#include "CalcViewModel/Common/NavCategory.h"
+#include "CalcViewModel/Common/CalculatorButtonUser.h"
+#include "CalcViewModel/Common/NetworkManager.h"
 
-#include "Mocks\CurrencyHttpClient.h"
+#include "Mocks/CurrencyHttpClient.h"
 #include "Helpers.h"
 
 #include "UnitTestApp.xaml.h"

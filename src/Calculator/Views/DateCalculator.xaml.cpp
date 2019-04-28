@@ -36,7 +36,7 @@ using namespace Windows::UI::Xaml::Input;
 using namespace Windows::UI::Xaml::Media;
 using namespace Windows::UI::Xaml::Navigation;
 
-// The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
+// The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
 DateCalculator::DateCalculator()
 {
@@ -46,7 +46,7 @@ DateCalculator::DateCalculator()
 
     // Set Calendar Identifier
     DateDiff_FromDate->CalendarIdentifier = localizationSettings.GetCalendarIdentifier();
-    DateDiff_ToDate->CalendarIdentifier = localizationSettings.GetCalendarIdentifier();;
+    DateDiff_ToDate->CalendarIdentifier = localizationSettings.GetCalendarIdentifier();
 
     // Setting the FirstDayofWeek
     DateDiff_FromDate->FirstDayOfWeek = localizationSettings.GetFirstDayOfWeek();
